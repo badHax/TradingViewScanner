@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TVScanner", "TVScanner\TVScanner.csproj", "{39A50457-64CC-4359-B8D6-E61D11F7A588}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TVScanner.Jobs", "TVScanner.Jobs\TVScanner.Jobs.csproj", "{55D87117-84D6-4E3B-910D-EC9CDF5275F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TVScanner.API", "TVScanner.API\TVScanner.API.csproj", "{89C88311-4F19-483C-8F3E-5FB4F4209313}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TVScanner.Shared", "TVScanner.Shared\TVScanner.Shared.csproj", "{6D2228F5-6AB9-4271-86D9-D18ADB79C630}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{433EC8EE-41B4-4EC5-B79A-3A9AFDF8A69B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TVScanner.Data", "TVScanner.Data\TVScanner.Data.csproj", "{4BBF4BBA-71F3-4145-A44B-1889EC14D352}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39A50457-64CC-4359-B8D6-E61D11F7A588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39A50457-64CC-4359-B8D6-E61D11F7A588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39A50457-64CC-4359-B8D6-E61D11F7A588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39A50457-64CC-4359-B8D6-E61D11F7A588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55D87117-84D6-4E3B-910D-EC9CDF5275F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55D87117-84D6-4E3B-910D-EC9CDF5275F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55D87117-84D6-4E3B-910D-EC9CDF5275F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55D87117-84D6-4E3B-910D-EC9CDF5275F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89C88311-4F19-483C-8F3E-5FB4F4209313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C88311-4F19-483C-8F3E-5FB4F4209313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C88311-4F19-483C-8F3E-5FB4F4209313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C88311-4F19-483C-8F3E-5FB4F4209313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D2228F5-6AB9-4271-86D9-D18ADB79C630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D2228F5-6AB9-4271-86D9-D18ADB79C630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D2228F5-6AB9-4271-86D9-D18ADB79C630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D2228F5-6AB9-4271-86D9-D18ADB79C630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{433EC8EE-41B4-4EC5-B79A-3A9AFDF8A69B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{433EC8EE-41B4-4EC5-B79A-3A9AFDF8A69B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{433EC8EE-41B4-4EC5-B79A-3A9AFDF8A69B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{433EC8EE-41B4-4EC5-B79A-3A9AFDF8A69B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BBF4BBA-71F3-4145-A44B-1889EC14D352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BBF4BBA-71F3-4145-A44B-1889EC14D352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BBF4BBA-71F3-4145-A44B-1889EC14D352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BBF4BBA-71F3-4145-A44B-1889EC14D352}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A17060FE-3662-49FE-9D7B-F88B592027FB}
+	EndGlobalSection
+EndGlobal

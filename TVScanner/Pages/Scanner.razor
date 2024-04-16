@@ -1,0 +1,231 @@
+﻿@page "/"
+@layout MainLayout
+@using System.Text.Json.Serialization
+@using System.Text.Json
+@using Majorsoft.Blazor.Components.Notifications
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.AspNetCore.Http.Connections
+@using TVScanner.Shared.Scanner
+@using TVScanner.Shared
+@using TVScanner.Services
+@using Microsoft.AspNetCore.Authorization
+
+@inject IJSRuntime JSRuntime
+@inject IHtmlNotificationService HtmlNotificationService
+@inject NavigationManager NavigationManager
+@inject TVScanner.Services.NotificationService NotificationService
+@inject IAccessTokenProvider TokenProvider
+@inject HttpClient Http
+@inject ILogger<Scanner> Logger
+@implements IAsyncDisposable
+@attribute [Authorize]
+
+@if (_htmlNotificationPermission != HtmlNotificationPermissionTypes.Granted)
+{
+    <button class="btn btn-primary" @onclick="RequestPermission">Request user Permission</button>
+}
+
+@* <PageTitle>Scanner @countTxt</PageTitle> *@
+
+<div class="wrapper">
+    <div class="left">
+        <h3>Relative Volume Breakout</h3>
+
+
+        @if (records == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (records.Count() == 0)
+        {
+            <p><em>No results... be patient</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Change %</th>
+                        <th>ATR</th>
+                        <th>Relative Volume</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in records)
+                    {
+                        <tr>
+                            <td>@record.Name</td>
+                            <td>@record.Close</td>
+                            <td>@record.Change</td>
+                            <td>@record.ATR</td>
+                            <td>@record.RelativeVolume10DCalc</td>
+                            <td> <a target="_blank" href="https://www.binance.com/en/futures/@record.Name" class="btn btn-primary">View</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="right">
+        <h3>High of Day Breakout</h3>
+
+        @if (highOfDayRecords == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (highOfDayRecords.Count() == 0)
+        {
+            <p><em>No results... be patient</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Change %</th>
+                        <th>ATR</th>
+                        <th>Relative Volume</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in highOfDayRecords)
+                    {
+                        <tr>
+                            <td>@record.Name</td>
+                            <td>@record.Close</td>
+                            <td>@record.Change</td>
+                            <td>@record.ATR</td>
+                            <td>@record.RelativeVolume10DCalc</td>
+                            <td> <a target="_blank" href="https://www.binance.com/en/futures/@record.Name" class="btn btn-primary">View</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+
+@code {
+    private ScanRecord[]? records = [];
+    private ScanRecord[]? highOfDayRecords = [];
+    private string countTxt = "";
+    private HubConnection? hubConnection;
+    private const string notificationTitle = "Criteria Matched!";
+    private const string notificationAdded = "{0} is on the move";
+
+    //HTML5 notification
+    private bool _notificationSupported;
+    private HtmlNotificationPermissionTypes _htmlNotificationPermission;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var tokenResult = await TokenProvider.RequestAccessToken();
+        AccessToken? token;
+        tokenResult.TryGetToken(out token);
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Http.BaseAddress.ToString() + "scannerhub", options =>
+            {
+                options.AccessTokenProvider = () => Task.FromResult(token?.Value);
+            })
+            .AddJsonProtocol(cfg =>
+            {
+                cfg.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
+                cfg.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            })
+            .Build();
+
+        hubConnection.On<IEnumerable<ScanRecord>>(Constants.MessageListeners.RelativeVolume, async (message) =>
+        {
+            Console.WriteLine("RelativeVolume message received");
+            Console.WriteLine(message);
+            records = await UpdateRecords(message, records ?? Array.Empty<ScanRecord>());
+            await InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.On<IEnumerable<ScanRecord>>(Constants.MessageListeners.HighOfDay, async (message) =>
+        {
+            highOfDayRecords = await UpdateRecords(message, highOfDayRecords ?? Array.Empty<ScanRecord>());
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _notificationSupported = await HtmlNotificationService.IsBrowserSupportedAsync();
+            _htmlNotificationPermission = await HtmlNotificationService.CheckPermissionAsync();
+        }
+    }
+
+    private async Task RequestPermission()
+    {
+        await HtmlNotificationService.RequestPermissionAsync(async res =>
+        {
+            _htmlNotificationPermission = res;
+            StateHasChanged();
+        });
+    }
+
+    private void PlaySound()
+    {
+        JSRuntime.InvokeAsync<string>("PlaySound", new object[] { });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection != null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+
+        if (NotificationService != null)
+        {
+            await NotificationService.DisposeAsync();
+        }
+    }
+
+    private async Task<ScanRecord[]> UpdateRecords(IEnumerable<ScanRecord> message, ScanRecord[] scanRecords)
+    {
+        await Alert(scanRecords, message.ToArray());
+        countTxt = message.Count().ToString();
+
+        return message.ToArray();
+    }
+
+    private async Task Alert(ScanRecord[] oldRecords, ScanRecord[] newRecords)
+    {
+        if (oldRecords.Length > newRecords.Length)
+        {
+            await JSRuntime.InvokeAsync<string>("PlaySound", new object[] { });
+        }
+        else
+        {
+            bool playSound = false;
+            foreach (var newRecord in newRecords)
+            {
+                if (!oldRecords.Any(x => x.Name == newRecord.Name))
+                {
+                    playSound |= true;
+                    await NotificationService!.ShowDesktopNotification(notificationTitle, string.Format(notificationAdded, newRecord.Name), newRecord.Name);
+                }
+            }
+
+            if (playSound)
+            {
+                await JSRuntime.InvokeAsync<string>("PlaySound", new object[] { });
+            }
+        }
+
+    }
+}

@@ -1,0 +1,50 @@
+﻿@inject IJSRuntime JSRuntime
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">TVScanner</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Scanner
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" target="_blank" href="https://www.binance.com/en/futures/BTCUSDT">
+                <span class="bi bi-window-split" aria-hidden="true"></span> Binance App
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" target="_blank" href="https://www.tradingview.com/chart/NhasjbJx/">
+                <span class="bi bi-window-split" aria-hidden="true"></span> Trading View
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" target="_blank" href="https://coinalyze.net/tokenfi/usdt/binance/">
+                <span class="bi bi-window-split" aria-hidden="true"></span> Coinalyze
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" target="_blank" href="https://www.coinglass.com/pro/futures/LiquidationHeatMapNew">
+                <span class="bi bi-window-split" aria-hidden="true"></span> Coin Glass
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

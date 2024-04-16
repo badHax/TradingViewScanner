@@ -1,0 +1,78 @@
+{
+  "filter": [
+    {
+      "left": "exchange",
+      "operation": "equal",
+      "right": "BINANCE"
+    },
+    {
+      "left": "High.5D",
+      "operation": "eless",
+      "right": "high|5"
+    },
+    {
+      "left": "currency",
+      "operation": "equal",
+      "right": "USDT"
+    }
+  ],
+  "options": {
+    "lang": "en"
+  },
+  "filter2": {
+    "operator": "and",
+    "operands": [
+      {
+        "operation": {
+          "operator": "or",
+          "operands": [
+            {
+              "expression": {
+                "left": "typespecs",
+                "operation": "has",
+                "right": [
+                  "perpetual"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "markets": [
+    "crypto"
+  ],
+  "symbols": {
+    "query": {
+      "types": []
+    },
+    "tickers": []
+  },
+  "columns": [
+    "base_currency_logoid",
+    "currency_logoid",
+    "name",
+    "close",
+    "change",
+    "ATR",
+    "relative_volume_10d_calc",
+    "high",
+    "description",
+    "type",
+    "subtype",
+    "update_mode",
+    "exchange",
+    "pricescale",
+    "minmov",
+    "fractional",
+    "minmove2"
+  ],
+  "sort": {
+    "sortBy": "24h_vol|5",
+    "sortOrder": "desc"
+  },
+  "price_conversion": {
+    "to_symbol": false
+  }
+}
