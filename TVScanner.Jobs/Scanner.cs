@@ -28,6 +28,19 @@ namespace TVScanner.Jobs
             ScanFilter scanFilter,
             string messageType)
         {
+            if (scopeFactory == null)
+            {
+                throw new ArgumentNullException(nameof(scopeFactory));
+            }
+            if (scanFilter == null)
+            {
+                throw new ArgumentNullException(nameof(scanFilter));
+            }
+            if (string.IsNullOrWhiteSpace(messageType))
+            {
+                throw new ArgumentNullException(nameof(messageType));
+            }
+
             _scopeFactory = scopeFactory;
             var provider = _scopeFactory.CreateScope().ServiceProvider;
 

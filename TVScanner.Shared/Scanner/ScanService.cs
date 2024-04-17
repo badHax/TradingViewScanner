@@ -1,23 +1,27 @@
-﻿using Microsoft.Extensions.Options;
-using System.Text.Json;
-using TVScanner.Shared.Configuration;
+﻿using System.Text.Json;
 
 namespace TVScanner.Shared.Scanner
 {
     public class ScanService
     {
-        private readonly string BaseUrl;
         private readonly HttpClient _httpClient;
 
-        public ScanService(IOptions<AppConfig> config)
+        public ScanService(IHttpClientFactory httpClient)
         {
-            BaseUrl = config.Value.ScannerConfig.Url;
-            _httpClient = new HttpClient();
+            if (httpClient == null)
+            {
+                throw new ArgumentNullException(nameof(httpClient));
+            }
+            _httpClient = httpClient.CreateClient(nameof(ScanService)) ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<ScanRecord[]> GetFilteredResult(ScanFilter filter)
         {
-            var result = await _httpClient.PostAsync($"{BaseUrl}/crypto/scan", new StringContent(filter.AsJson));
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+            var result = await _httpClient.PostAsync($"crypto/scan", new StringContent(filter.AsJson));
             var content = await result.Content.ReadAsStringAsync();
 
             var scanResult = JsonSerializer.Deserialize<ScanResult>(content);

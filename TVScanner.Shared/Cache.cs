@@ -19,6 +19,10 @@ namespace TVScanner.Shared
 
         public InMemoryCache(IMemoryCache memoryCache)
         {
+            if (memoryCache == null)
+            {
+                throw new ArgumentNullException(nameof(memoryCache));
+            }
             // need a mechanism to clear the cache after a certain period of time
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromMinutes(5));
@@ -35,6 +39,14 @@ namespace TVScanner.Shared
         /// <exception cref="NotImplementedException"></exception>
         public void Subscribe<T>(string messageName, Func<object, Task> value)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if (string.IsNullOrWhiteSpace(messageName))
+            {
+                throw new ArgumentNullException(nameof(messageName));
+            }
             if (!_subscribers.ContainsKey(messageName))
             {
                 _subscribers[messageName] = new List<Func<object, Task>>();
@@ -45,6 +57,11 @@ namespace TVScanner.Shared
 
         public T Get<T>(string key)
         {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (_cache.TryGetValue(key, out string? data))
             {
                 return JsonSerializer.Deserialize<T>(data!.ToString())!;
@@ -55,6 +72,11 @@ namespace TVScanner.Shared
 
         public async Task Set<T>(string key, T value)
         {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             _cache.Set(key, JsonSerializer.Serialize(value), _cacheEntryOptions);
 
             if (_subscribers.ContainsKey(key))

@@ -33,7 +33,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__TVScannerContext=Server=tvscanner.db;Database=TVScanner;User Id=sa;Password=Password123;Encrypt=False;MultipleActiveResultSets=True;Connection Timeout=30;
+      - ConnectionStrings__TVScannerContext=Host=tvscanner.db;Port=5432;Database=TVScanner;Username=postgres;password=Password123;
       - Logging__LogLevel__Default=Information
     depends_on:
       - tvscanner.db
@@ -41,13 +41,12 @@ services:
     - tvscanner_backend
     - tvscanner_fronend
   tvscanner.db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres:latest
     container_name: tvscanner-db
     restart: on-failure
     ports:
-      - 15008:1433
+      - 15008:5432
     environment:
-      - SA_PASSWORD=Password123
-      - ACCEPT_EULA=Y
+      - POSTGRES_PASSWORD=Password123
     networks:
       - tvscanner_backend

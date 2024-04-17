@@ -2,9 +2,9 @@
 
 namespace TVScanner.Shared
 {
-    public class ObjectExtensions
+    public static class ObjectExtensions
     {
-        public static string ToJson(object obj)
+        public static string ToJson(this object obj)
         {
             return JsonSerializer.Serialize(obj);
         }

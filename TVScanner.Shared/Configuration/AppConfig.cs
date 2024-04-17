@@ -27,9 +27,9 @@
     public class AppConfig
     {
         [Required(AllowEmptyStrings = false)]
-        public required ScannerConfig ScannerConfig { get; set; }
+        public ScannerConfig ScannerConfig { get; set; }
         [Required(AllowEmptyStrings = false)]
-        public required NotificationConfg NotificationConfig { get; set; }
+        public NotificationConfg NotificationConfig { get; set; }
     }
 
 }

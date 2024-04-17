@@ -28,11 +28,21 @@ builder.Services.AddOptions<AppConfig>()
     .Bind(builder.Configuration.GetSection("AppConfig"))
     .ValidateDataAnnotations();
 
+// named http clients
+builder.Services.AddHttpClient(nameof(NotificationService), client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["AppConfig:NotificationConfig:PushUrlBase"]!);
+});
+builder.Services.AddHttpClient(nameof(ScanService), client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["AppConfig:ScannerConfig:Url"]!);
+});
+
 // database
 var connectionString = builder.Configuration.GetConnectionString(dbContextString)
     ?? throw new InvalidOperationException($"Connection string '{dbContextString}' not found.");
 
-builder.Services.AddDbContextFactory<TVScannerContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<TVScannerContext>(options => options.UseNpgsql(connectionString));
 
 // authentication
 builder.Services
