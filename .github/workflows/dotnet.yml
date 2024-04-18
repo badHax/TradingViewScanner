@@ -33,7 +33,7 @@ jobs:
       with:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.WEBAPP_NAME }}
-        context: TVScanner/
+        contextName: Docker.Web
         
     - name: Publish API Image
       uses: matootie/github-docker@v3.1.0
@@ -41,11 +41,9 @@ jobs:
       with:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.API_NAME }}
-        context: TVScanner.API/
+        contextName: Docker.API
         
     - name: Print Web Image URL
       run: |
         echo ${{ steps.publish-webapp.outputs.imageURL }}
         echo ${{ steps.publish-api.outputs.imageURL }}
-
-
