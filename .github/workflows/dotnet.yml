@@ -26,3 +26,26 @@ jobs:
       run: dotnet build TVScanner.sln --no-restore
     - name: Test
       run: dotnet test TVScanner.sln --no-build --verbosity normal
+
+    - name: Publish Web Image
+      uses: matootie/github-docker@v3.1.0
+      id: publish-webapp
+      with:
+        accessToken: ${{ github.token }}
+        imageName: ${{ webapp_name }}
+        context: TVScanner/
+        
+    - name: Publish API Image
+      uses: matootie/github-docker@v3.1.0
+      id: publish-api
+      with:
+        accessToken: ${{ github.token }}
+        imageName: ${{ api_name }}
+        context: TVScanner.API/
+        
+    - name: Print Web Image URL
+      run: |
+        echo ${{ steps.publish-webapp.outputs.imageURL }}
+        echo ${{ steps.publish-api.outputs.imageURL }}
+
+
