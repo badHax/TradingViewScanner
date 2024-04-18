@@ -10,7 +10,7 @@ services:
     container_name: tvscanner-web
     build:
       context: .
-      dockerfile: TVScanner/Dockerfile
+      dockerfile: Dockerfile.Web
     ports:
       - 15007:80
     depends_on:
@@ -23,7 +23,7 @@ services:
     restart: on-failure
     build:
       context: .
-      dockerfile: TVScanner.API/Dockerfile
+      dockerfile: Dockerfile.API
     ports:
     - 15005:8080
     - 15006:8081
