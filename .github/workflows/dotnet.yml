@@ -32,7 +32,7 @@ jobs:
       id: publish-webapp
       with:
         accessToken: ${{ github.token }}
-        imageName: ${{ WEBAPP_NAME }}
+        imageName: ${{ secrets.WEBAPP_NAME }}
         context: TVScanner/
         
     - name: Publish API Image
@@ -40,7 +40,7 @@ jobs:
       id: publish-api
       with:
         accessToken: ${{ github.token }}
-        imageName: ${{ API_NAME }}
+        imageName: ${{ secrets.API_NAME }}
         context: TVScanner.API/
         
     - name: Print Web Image URL
