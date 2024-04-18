@@ -33,7 +33,7 @@ jobs:
       with:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.WEBAPP_NAME }}
-        contextName: Docker.Web
+        contextName: Dockerfile.Web
         
     - name: Publish API Image
       uses: matootie/github-docker@v3.1.0
@@ -41,7 +41,7 @@ jobs:
       with:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.API_NAME }}
-        contextName: Docker.API
+        contextName: Dockerfile.API
         
     - name: Print Web Image URL
       run: |
