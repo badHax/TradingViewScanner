@@ -2,24 +2,24 @@ version: '3.4'
 
 networks:
   tvscanner_backend:
-  tvscanner_fronend:
+  tvscanner_frontend:
 
 services:
-  tvscanner.web:
+  tvscannerweb:
     image: ${DOCKER_REGISTRY-}tvscannerweb
-    container_name: tvscanner-web
     build:
       context: .
       dockerfile: Dockerfile.Web
     ports:
       - 15007:80
+    environment:
+      - API_URL=https://localhost:15006
     depends_on:
-      - tvscanner.api
+      - tvscannerapi
     networks:
-    - tvscanner_fronend
-  tvscanner.api:
+    - tvscanner_frontend
+  tvscannerapi:
     image: ${DOCKER_REGISTRY-}tvscannerapi
-    container_name: tvscanner-api
     restart: on-failure
     build:
       context: .
@@ -36,17 +36,19 @@ services:
       - ConnectionStrings__TVScannerContext=Host=tvscanner.db;Port=5432;Database=TVScanner;Username=postgres;password=Password123;
       - Logging__LogLevel__Default=Information
     depends_on:
-      - tvscanner.db
+      - tvscannerdb
     networks:
     - tvscanner_backend
-    - tvscanner_fronend
-  tvscanner.db:
-    image: postgres:latest
-    container_name: tvscanner-db
+    - tvscanner_frontend
+  tvscannerdb:
+    image: ${DOCKER_REGISTRY-}tvscannerdb
     restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile.Database
     ports:
       - 15008:5432
     environment:
-      - POSTGRES_PASSWORD=Password123
+      - DB_PASSWORD=Password123
     networks:
       - tvscanner_backend

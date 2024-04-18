@@ -17,6 +17,7 @@ RUN dotnet build "./TVScanner.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./TVScanner.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+CMD ["sed", "-i", "s/API_URL/${API_URL}/g", "/app/publish/wwwroot/appsettings.json"]
 
 # We then get the base image for Nginx and set the 
 # work directory 

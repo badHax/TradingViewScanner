@@ -37,6 +37,8 @@ jobs:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.WEBAPP_NAME }}
         contextName: Dockerfile.Web
+        buildArgs: |
+            - API_URL= ${{ secrets.API_URL }}
         
     - name: Publish API Image
       uses: matootie/github-docker@v3.1.0
@@ -45,8 +47,29 @@ jobs:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.API_NAME }}
         contextName: Dockerfile.API
-        
-    - name: Print Web Image URL
-      run: |
-        echo ${{ steps.publish-webapp.outputs.imageURL }}
-        echo ${{ steps.publish-api.outputs.imageURL }}
+        buildArgs: |
+            - ASPNETCORE_Kestrel__Certificates__Default__Password=${{ secrets.CERT_PASSWORD }}
+            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+            - ASPNETCORE_HTTPS_PORTS=8081
+            - ASPNETCORE_HTTP_PORTS=8080
+            - ASPNETCORE_ENVIRONMENT=Prouduction
+            - ConnectionStrings__TVScannerContext=Host=tvscannerdb;Port=${{ secrets.DB_PORT }};Database=TVScanner;Username=${{ secrets.DB_USER }};password=${{ secrets.DB_PASSWORD }};
+            - Logging__LogLevel__Default=Information
+            
+    - name: Publish Db Image
+      uses: matootie/github-docker@v3.1.0
+      id: publish-db
+      with:
+        accessToken: ${{ github.token }}
+        imageName: ${{ secrets.DB_NAME }}
+        contextName: Dockerfile.Database
+        buildArgs: |
+            - DB_PASSWORD= ${{ secrets.DB_PASSWORD }}
+
+    - name: Deploy to swarm
+      uses: sagebind/docker-swarm-deploy-action@v2
+      with:
+        remote_host: ${{ secrets.DOCKER_SSH_HOST }}
+        ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+        ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
+        args: stack deploy --with-registry-auth --compose-file docker-compose.prod.yaml tvscanner

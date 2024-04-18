@@ -2,49 +2,30 @@ version: '3.4'
 
 networks:
   tvscanner_backend:
-  tvscanner_fronend:
+  tvscanner_frontend:
 
 services:
-  tvscanner.web:
-    image: ${DOCKER_REGISTRY-}tvscannerweb
-    container_name: tvscanner-web
-    build:
-      context: .
-      dockerfile: Dockerfile.Web
+  tvscannerweb:
+    image: ghcr.io/badhax/tradingviewscanner/tvscannerweb:latest
     ports:
       - 15007:80
     depends_on:
-      - tvscanner.api
+      - tvscannerapi
     networks:
-    - tvscanner_fronend
-  tvscanner.api:
-    image: ${DOCKER_REGISTRY-}tvscannerapi
-    container_name: tvscanner-api
+    - tvscanner_frontend
+  tvscannerapi:
+    image: ghcr.io/badhax/tradingviewscanner/tvscannerapi:latest
     restart: on-failure
-    build:
-      context: .
-      dockerfile: Dockerfile.API
     ports:
     - 15005:8080
     - 15006:8081
-    environment: 
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${{ secrets.CERT_PASSWORD }}
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_ENVIRONMENT=Prouduction
-      - ConnectionStrings__TVScannerContext=Host=tvscanner.db;Port=5432;Database=TVScanner;Username=${{ secrets.DB_USER }};password=${{ secrets.DB_PASSWORD }};
-      - Logging__LogLevel__Default=Information
     depends_on:
-      - tvscanner.db
+      - tvscannerdb
     networks:
     - tvscanner_backend
-    - tvscanner_fronend
-  tvscanner.db:
-    image: postgres:latest
-    container_name: tvscanner-db
+    - tvscanner_frontend
+  tvscannerdb:
+    image: ghcr.io/badhax/tradingviewscanner/tvscannerdb:latest
     restart: on-failure
-    environment:
-      - POSTGRES_PASSWORD= ${{ secrets.DB_PASSWORD }}
     networks:
       - tvscanner_backend
