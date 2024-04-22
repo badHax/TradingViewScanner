@@ -48,8 +48,8 @@ jobs:
         imageName: ${{ secrets.API_NAME }}
         contextName: Dockerfile.API
         buildArgs: |
-            #- ASPNETCORE_Kestrel__Certificates__Default__Password=${{ secrets.CERT_PASSWORD }}
-            #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+            - ASPNETCORE_Kestrel__Certificates__Default__Password=${{ secrets.CERT_PASSWORD }}
+            - ASPNETCORE_Kestrel__Certificates__Default__Path=https/aspnetapp.pfx
             - ASPNETCORE_HTTPS_PORTS=8081
             - ASPNETCORE_HTTP_PORTS=8080
             - BUILD_CONFIGURATION=Release
