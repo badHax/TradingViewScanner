@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
+COPY ["https/aspnetapp.pfx", "/app/publish/https/aspnetapp.pfx"]
 COPY ["TVScanner.API/TVScanner.API.csproj", "TVScanner.API/"]
 COPY ["TVScanner.Jobs/TVScanner.Jobs.csproj", "TVScanner.Jobs/"]
 COPY ["TVScanner.Shared/TVScanner.Shared.csproj", "TVScanner.Shared/"]
@@ -21,5 +22,40 @@ RUN dotnet publish "./TVScanner.API.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 
 FROM base AS final
 WORKDIR /app
+
+ARG ASPNETCORE_ENVIRONMENT=Release
+ARG ASPNETCORE_HTTPS_PORTS=8081
+ARG ASPNETCORE_HTTP_PORTS=8080
+ARG ConnectionStrings__TVScannerContext
+ARG Logging__LogLevel__Default=Information
+ARG Users__DefaultAdmin__Name
+ARG Users__DefaultAdmin__Password
+ARG Users__DefaultAdmin__Email
+ARG AppConfig__ScannerConfig__Url
+ARG Authentication__Microsoft__ClientSecret
+ARG Authentication__Microsoft__ClientId
+ARG AppConfig__NotificationConfig__DeviceId
+ARG AppConfig__NotificationConfig__ApiKey
+ARG AppConfig__NotificationConfig__PushUrlBase
+ARG ASPNETCORE_Kestrel__Certificates__Default__Password
+ARG ASPNETCORE_Kestrel__Certificates__Default__Path
+
+ENV ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
+ENV ASPNETCORE_HTTPS_PORTS=$ASPNETCORE_HTTPS_PORTS
+ENV ASPNETCORE_HTTP_PORTS=$ASPNETCORE_HTTP_PORTS
+ENV ConnectionStrings__TVScannerContext=$ConnectionStrings__TVScannerContext
+ENV Logging__LogLevel__Default=$Logging__LogLevel__Default
+ENV Users__DefaultAdmin__Name=$Users__DefaultAdmin__Name
+ENV Users__DefaultAdmin__Password=$Users__DefaultAdmin__Password
+ENV Users__DefaultAdmin__Email=$Users__DefaultAdmin__Email
+ENV AppConfig__ScannerConfig__Url=$AppConfig__ScannerConfig__Url
+ENV Authentication__Microsoft__ClientSecret=$Authentication__Microsoft__ClientSecret
+ENV Authentication__Microsoft__ClientId=$Authentication__Microsoft__ClientId
+ENV AppConfig__NotificationConfig__DeviceId=$AppConfig__NotificationConfig__DeviceId
+ENV AppConfig__NotificationConfig__ApiKey=$AppConfig__NotificationConfig__ApiKey
+ENV AppConfig__NotificationConfig__PushUrlBase=$AppConfig__NotificationConfig__PushUrlBase
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=$ASPNETCORE_Kestrel__Certificates__Default__Password
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=$ASPNETCORE_Kestrel__Certificates__Default__Path
+
 COPY --chmod=0755 --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "TVScanner.API.dll"]

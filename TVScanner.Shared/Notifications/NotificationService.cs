@@ -4,7 +4,7 @@ using TVScanner.Shared.Scanner;
 
 namespace TVScanner.Shared.Notifications
 {
-    public class NotificationService
+    public class NotificationService : INotificationService
     {
         private const string _notificationTitle = "{0} Criteria Matched!";
         private const string _notificationAdded = "{0} is on the move";

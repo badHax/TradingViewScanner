@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using NCrontab;
 using TVScanner.Shared.Configuration;
+using TVScanner.Shared.Logging;
 using TVScanner.Shared.Scanner;
 
 namespace TVScanner.Jobs
@@ -13,15 +14,20 @@ namespace TVScanner.Jobs
         private DateTime _nextRun;
         private readonly string chronExpression;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly ITaskDelayer _taskDelayer;
+        private readonly IAbstractLogger _logger;
 
         public PurgeOldRecords(
             IOptions<AppConfig> config,
             IServiceScopeFactory scopeFactory)
         {
+            var serviceProvider = scopeFactory.CreateScope().ServiceProvider;
             chronExpression = config.Value.ScannerConfig.PurgeSchedule;
             _schedule = CrontabSchedule.Parse(chronExpression);
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
             _scopeFactory = scopeFactory;
+            _taskDelayer = serviceProvider.GetRequiredService<ITaskDelayer>();
+            _logger = serviceProvider.GetRequiredService<IAbstractLogger>();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -29,12 +35,19 @@ namespace TVScanner.Jobs
             do
             {
                 var now = DateTime.Now;
+                _logger.LogInformation(this, $"PurgeOldRecords is running at {now}");
                 if (now > _nextRun)
                 {
                     await Process();
                     _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
                 }
-                await Task.Delay(60 * 60 * 1000, stoppingToken); // sleep for an hour
+                else
+                {
+                    _logger.LogInformation(this, $"PurgeOldRecords will run next at {_nextRun}");
+                }
+
+                var timespan = _nextRun - now;
+                await _taskDelayer.Delay(timespan, stoppingToken);
             }
             while (!stoppingToken.IsCancellationRequested);
         }

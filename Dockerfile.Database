@@ -1,5 +1,7 @@
 FROM postgres:latest
 
-ENV POSTGRES_PASSWORD= ${DB_PASSWORD}}
+ARG DB_PASSWORD
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENV POSTGRES_PASSWORD $DB_PASSWORD
+
+CMD ["docker-entrypoint.sh", "postgres"]

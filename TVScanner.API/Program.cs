@@ -10,6 +10,7 @@ using TVScanner.Data.AccessProvider;
 using TVScanner.Jobs;
 using TVScanner.Shared;
 using TVScanner.Shared.Configuration;
+using TVScanner.Shared.Logging;
 using TVScanner.Shared.Notifications;
 using TVScanner.Shared.Scanner;
 using static TVScanner.API.Extensions.SignalRExtensions;
@@ -64,16 +65,18 @@ builder.Services
     });
 builder.Services
     .AddAuthentication()
-    .AddMicrosoftAccount(microsoftOptions =>
-    {
-        microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ?? throw new InvalidOperationException("ClientId not found");
-        microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ?? throw new InvalidOperationException("ClientSecret not found");
-    })
+    //.AddMicrosoftAccount(microsoftOptions =>
+    //{
+    //    microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ?? throw new InvalidOperationException("ClientId not found");
+    //    microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ?? throw new InvalidOperationException("ClientSecret not found");
+    //})
     .AddIdentityServerJwt();
 
-builder.Services.AddSingleton<ScanService>();
-builder.Services.AddSingleton<NotificationService>();
+builder.Services.AddSingleton<IScanService, ScanService>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddScoped<IScanRecordManager, ScanRecordManager>();
+builder.Services.AddScoped<ITaskDelayer, TaskDelayer>();
+builder.Services.AddScoped<IAbstractLogger, ApplicationLogger>();
 
 // add background services
 builder.Services.AddHostedService<HighOfDayScanner>();

@@ -48,13 +48,23 @@ jobs:
         imageName: ${{ secrets.API_NAME }}
         contextName: Dockerfile.API
         buildArgs: |
-            - ASPNETCORE_Kestrel__Certificates__Default__Password=${{ secrets.CERT_PASSWORD }}
-            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+            #- ASPNETCORE_Kestrel__Certificates__Default__Password=${{ secrets.CERT_PASSWORD }}
+            #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
             - ASPNETCORE_HTTPS_PORTS=8081
             - ASPNETCORE_HTTP_PORTS=8080
-            - ASPNETCORE_ENVIRONMENT=Prouduction
+            - BUILD_CONFIGURATION=Release
+            - ASPNETCORE_ENVIRONMENT=Release
             - ConnectionStrings__TVScannerContext=Host=tvscannerdb;Port=${{ secrets.DB_PORT }};Database=TVScanner;Username=${{ secrets.DB_USER }};password=${{ secrets.DB_PASSWORD }};
             - Logging__LogLevel__Default=Information
+            - Users__DefaultAdmin:Name=${{ secrets.ADMIN_NAME }}
+            - Users__DefaultAdmin:Password=${{ secrets.ADMIN_PASSWORD }}
+            - Users__DefaultAdmin:Email=${{ secrets.ADMIN_EMAIL }}
+            - AppConfig__ScannerConfig__Url=${{ secrets.SCANNER_URL }}
+            - Authentication__Microsoft__ClientSecret=${{ secrets.MICROSOFT_CLIENT_SECRET }}
+            - Authentication__Microsoft__ClientId=${{ secrets.MICROSOFT_CLIENT_ID }}
+            - AppConfig__NotificationConfig__DeviceId=${{ secrets.NOTIFICATION_DEVICE_ID }}
+            - AppConfig__NotificationConfig__ApiKey=${{ secrets.NOTIFICATION_API_KEY }}
+            - AppConfig__NotificationConfig__PushUrlBase=${{ secrets.NOTIFICATION_PUSH_URL }}
             
     - name: Publish Db Image
       uses: matootie/github-docker@v3.1.0

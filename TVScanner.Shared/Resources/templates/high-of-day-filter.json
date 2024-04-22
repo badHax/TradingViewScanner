@@ -14,6 +14,11 @@
       "left": "currency",
       "operation": "equal",
       "right": "USDT"
+    },
+    {
+      "left": "relative_volume_10d_calc",
+      "operation": "egreater",
+      "right": 3
     }
   ],
   "options": {
@@ -56,7 +61,7 @@
     "close",
     "change",
     "ATR",
-    "relative_volume_10d_calc",
+    "relative_volume_10d_calc|5",
     "high",
     "description",
     "type",

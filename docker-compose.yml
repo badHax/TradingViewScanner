@@ -10,10 +10,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.Web
+      args:
+        - API_URL=https://localhost:15006
     ports:
       - 15007:80
-    environment:
-      - API_URL=https://localhost:15006
     depends_on:
       - tvscannerapi
     networks:
@@ -33,8 +33,15 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__TVScannerContext=Host=tvscanner.db;Port=5432;Database=TVScanner;Username=postgres;password=Password123;
+      - ConnectionStrings__TVScannerContext=Host=tvscannerdb;Port=5432;Database=TVScanner;Username=postgres;password=Password123;
       - Logging__LogLevel__Default=Information
+      - Users__DefaultAdmin:Name=devadmin
+      - Users__DefaultAdmin:Password=Password123
+      - Users__DefaultAdmin:Email=devadmin@tvscanner.com
+      - AppConfig__NotificationConfig__PushUrlBase=https://test.com
+      - AppConfig__NotificationConfig__DeviceId=
+      - AppConfig__NotificationConfig__ApiKey=
+      - AppConfig__ScannerConfig__Url=https://test.com
     depends_on:
       - tvscannerdb
     networks:
@@ -46,9 +53,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.Database
+      args:
+         - DB_PASSWORD=Password123
     ports:
       - 15008:5432
-    environment:
-      - DB_PASSWORD=Password123
     networks:
       - tvscanner_backend

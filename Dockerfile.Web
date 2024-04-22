@@ -1,5 +1,7 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+ARG API_URL
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
@@ -17,7 +19,6 @@ RUN dotnet build "./TVScanner.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./TVScanner.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-CMD ["sed", "-i", "s/API_URL/${API_URL}/g", "/app/publish/wwwroot/appsettings.json"]
 
 # We then get the base image for Nginx and set the 
 # work directory 
@@ -28,4 +29,9 @@ WORKDIR /usr/share/nginx/html
 # folder into nginx/html for nginx to serve. The destination
 # should be the same as what you set in the nginx.conf.
 COPY --from=publish /app/publish/wwwroot /usr/local/webapp/nginx/html
+
+# Replace API_URL placeholder with the actual URL
+ARG API_URL
+RUN sed -i "s|API_URL|${API_URL}|g" /usr/local/webapp/nginx/html/appsettings.json
+
 COPY ["TVScanner/nginx.conf", "/etc/nginx/nginx.conf"] 

@@ -57,7 +57,7 @@ namespace TVScanner.Shared.Scanner
         [JsonPropertyName("minmove2")]
         public float Minmove2 { get; set; }
 
-        public DateTime LastUpdated { get; set; }
+        public DateTimeOffset LastUpdated { get; set; }
         public ScanType ScanFilter { get; set; }
     }
 

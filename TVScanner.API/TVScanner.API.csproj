@@ -5,8 +5,8 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-TVScanner.API-1e8c93af-faca-4b9d-a458-4f7b84927c40</UserSecretsId>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+		<!--<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>-->
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -5,7 +5,7 @@ using TVScanner.Shared.Scanner;
 
 namespace TVScanner.Jobs.Tests
 {
-    public class TestScanner : Scanner
+    internal sealed class TestScanner : Scanner
     {
         public TestScanner(
         IServiceScopeFactory scopeFactory,
