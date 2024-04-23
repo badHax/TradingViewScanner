@@ -55,7 +55,7 @@ namespace TVScanner.Shared.Scanner
                 record.Minmov = SafeToFloat(item.D[13]);
                 record.Fractional = SafeToBool(item.D[14]);
                 record.Minmove2 = SafeToFloat(item.D[15]);
-                record.LastUpdated = DateTimeOffset.Now;
+                record.LastUpdated = DateTimeOffset.UtcNow;
                 record.ScanFilter = filter.Type;
             }
 
