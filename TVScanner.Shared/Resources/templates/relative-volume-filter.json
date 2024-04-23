@@ -11,6 +11,14 @@
       "right": 5
     },
     {
+      "left": "change|5",
+      "operation": "not_in_range",
+      "right": [
+        -4.9,
+        4.9
+      ]
+    },
+    {
       "left": "currency",
       "operation": "equal",
       "right": "USDT"
