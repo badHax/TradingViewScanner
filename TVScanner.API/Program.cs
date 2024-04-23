@@ -15,8 +15,6 @@ using TVScanner.Shared.Notifications;
 using TVScanner.Shared.Scanner;
 using static TVScanner.API.Extensions.SignalRExtensions;
 
-var clientApp = "http://localhost:15007";
-var clientAppName = "TVScanner.Client";
 var apiAppName = "TVScanner.API";
 var dbContextString = "TVScannerContext";
 
@@ -28,6 +26,9 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddOptions<AppConfig>()
     .Bind(builder.Configuration.GetSection("AppConfig"))
     .ValidateDataAnnotations();
+
+var clientApp = builder.Configuration["ClientApp:Host"] ?? throw new InvalidOperationException("ClientApp not found");
+var clientAppName = builder.Configuration["ClientApp:Name"] ?? throw new InvalidOperationException("ClientAppName not found");
 
 // named http clients
 builder.Services.AddHttpClient(nameof(NotificationService), client =>
@@ -131,7 +132,7 @@ app.UseCors(b => b
 
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection(); // running on docker, so https is configured in the reverse proxy
 
 app.UseRouting();
 app.UseResponseCaching();
