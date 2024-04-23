@@ -1,8 +1,10 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TVScanner.API.Extensions;
 using TVScanner.API.Hubs;
 using TVScanner.Data;
@@ -66,12 +68,12 @@ builder.Services
     });
 builder.Services
     .AddAuthentication()
-    //.AddMicrosoftAccount(microsoftOptions =>
-    //{
-    //    microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ?? throw new InvalidOperationException("ClientId not found");
-    //    microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ?? throw new InvalidOperationException("ClientSecret not found");
-    //})
-    .AddIdentityServerJwt();
+    .AddIdentityServerJwt()
+    .AddJwtBearer("IdentityServerJwtBearer", options =>
+    {
+        options.Authority = builder.Configuration["IdentityServer:Authority"];
+        options.Audience = clientApp;
+    });
 
 builder.Services.AddSingleton<IScanService, ScanService>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
