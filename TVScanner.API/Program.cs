@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TVScanner.API.Extensions;
 using TVScanner.API.Hubs;
+using TVScanner.API.Identity;
 using TVScanner.Data;
 using TVScanner.Data.AccessProvider;
 using TVScanner.Jobs;
@@ -66,14 +67,12 @@ builder.Services
                 .WithScopes(allowedScopes);
         });
     });
+
+builder.Services.AddTransient<IIssuerNameService, CustomIssuerNameService>();
+
 builder.Services
     .AddAuthentication()
-    .AddIdentityServerJwt()
-    .AddJwtBearer("IdentityServerJwtBearer", options =>
-    {
-        options.Authority = builder.Configuration["IdentityServer:Authority"];
-        options.Audience = clientApp;
-    });
+    .AddIdentityServerJwt();
 
 builder.Services.AddSingleton<IScanService, ScanService>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
