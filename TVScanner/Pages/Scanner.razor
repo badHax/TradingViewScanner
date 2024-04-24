@@ -131,7 +131,7 @@
         tokenResult.TryGetToken(out token);
 
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(new Uri(ApiHttp.BaseAddress, "scannerhub"), options =>
+            .WithUrl(new Uri(ApiHttp.BaseAddress, "api/scannerhub"), options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(token?.Value);
             })
