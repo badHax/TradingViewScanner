@@ -1,19 +1,20 @@
 ﻿using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Data;
 using TVScanner.Shared.Scanner;
 
 namespace TVScanner.Data
 {
-    public class TVScannerContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class TVScannerContext : ApiAuthorizationDbContext<ApplicationUser>, IDataProtectionKeyContext
     {
-        DbSet<ScanRecord> ScanRecords { get; set; }
+        public DbSet<ScanRecord> ScanRecords { get; set; }
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
         public IConfiguration Configuration { get; }
 
         public TVScannerContext(DbContextOptions<TVScannerContext> options,

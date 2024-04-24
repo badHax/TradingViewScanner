@@ -1,6 +1,7 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using TVScanner.API.Extensions;
@@ -72,6 +73,9 @@ builder.Services.AddTransient<IIssuerNameService, CustomIssuerNameService>();
 builder.Services
     .AddAuthentication()
     .AddIdentityServerJwt();
+
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<TVScannerContext>();
 
 builder.Services.AddSingleton<IScanService, ScanService>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
