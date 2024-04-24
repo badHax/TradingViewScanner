@@ -110,7 +110,10 @@ builder.Services.AddSingleton<ICorsPolicyService>((container) =>
     };
 });
 
-builder.Services.AddSignalRMessages();
+builder.Services.AddSignalRMessages(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(

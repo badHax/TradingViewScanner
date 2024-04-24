@@ -13,6 +13,13 @@ namespace TVScanner.API.Extensions
             return services;
         }
 
+        public static IServiceCollection AddSignalRMessages(this IServiceCollection services, Action<HubOptions> options)
+        {
+            services.AddSignalR(options);
+            services.AddSingleton<SignalRMessageBuilder>();
+            return services;
+        }
+
         public class SignalRMessageBuilder
         {
             public SignalRMessageBuilder(IHubContext<ScannerHub> scannerHub, ICache cache)
