@@ -43,3 +43,4 @@ jobs:
         method: "POST"
         headers: '{ "Content-Type": "application/json" }'
         bearer-token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+        timeout: 30000
