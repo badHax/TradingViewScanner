@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   workflow_run:
-    workflows: [ Build ]
+    workflows: [ .Net ]
     types:
       - completed
 
