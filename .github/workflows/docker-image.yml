@@ -35,21 +35,11 @@ jobs:
         accessToken: ${{ github.token }}
         imageName: ${{ secrets.API_NAME }}
         contextName: Dockerfile.API
-            
-    # - name: Publish Db Image
-    #   uses: matootie/github-docker@v3.1.0
-    #   id: publish-db
-    #   with:
-    #     accessToken: ${{ github.token }}
-    #     imageName: ${{ secrets.DB_NAME }}
-    #     contextName: Dockerfile.Database
-    #     buildArgs: |
-    #         DB_PASSWORD= ${{ secrets.DB_PASSWORD }}
-
-    # - name: Deploy to swarm
-    #   uses: sagebind/docker-swarm-deploy-action@v2
-    #   with:
-    #     remote_host: ${{ secrets.DOCKER_SSH_HOST }}
-    #     ssh_private_key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
-    #     ssh_public_key: ${{ secrets.DOCKER_SSH_PUBLIC_KEY }}
-    #     args: stack deploy --with-registry-auth --compose-file docker-compose.prod.yaml tvscanner
+    
+    - name: "Create Deployment"
+      uses: indiesdev/curl@v1.1
+      with:
+        url: https://api.digitalocean.com/v2/apps/${{ secrets.DIGITALOCEAN_APP_ID }}/deployments
+        method: "POST"
+        headers: '{ "Content-Type": "application/json" }'
+        bearer-token: ${{ secrets.DIGITALOCEAN_TOKEN }}
