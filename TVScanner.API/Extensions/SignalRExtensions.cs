@@ -6,15 +6,10 @@ namespace TVScanner.API.Extensions
 {
     public static class SignalRExtensions
     {
-        public static IServiceCollection AddSignalRMessages(this IServiceCollection services)
+        public static IServiceCollection AddSignalRMessages(this IServiceCollection services, Action<HubOptions> options = null!)
         {
-            services.AddSignalR();
-            services.AddSingleton<SignalRMessageBuilder>();
-            return services;
-        }
+            if (options == null) options = (o) => { };
 
-        public static IServiceCollection AddSignalRMessages(this IServiceCollection services, Action<HubOptions> options)
-        {
             services.AddSignalR(options);
             services.AddSingleton<SignalRMessageBuilder>();
             return services;
