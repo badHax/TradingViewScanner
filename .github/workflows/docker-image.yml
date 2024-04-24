@@ -15,7 +15,9 @@ jobs:
       packages: write
       
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
     - name: Publish Web Image
       uses: matootie/github-docker@v3.1.0
       id: publish-webapp
