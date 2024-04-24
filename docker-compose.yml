@@ -38,10 +38,10 @@ services:
       - Users__DefaultAdmin:Name=devadmin
       - Users__DefaultAdmin:Password=Password123
       - Users__DefaultAdmin:Email=devadmin@tvscanner.com
-      - AppConfig__NotificationConfig__PushUrlBase=https://test.com
+      - AppConfig__NotificationConfig__PushUrlBase=https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey={_apiKey}&deviceId={_deviceId}
       - AppConfig__NotificationConfig__DeviceId=
       - AppConfig__NotificationConfig__ApiKey=
-      - AppConfig__ScannerConfig__Url=https://test.com
+      - AppConfig__ScannerConfig__Url=https://scanner.tradingview.com/
     depends_on:
       - tvscannerdb
     networks:
