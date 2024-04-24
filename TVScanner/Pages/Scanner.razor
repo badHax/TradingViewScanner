@@ -15,7 +15,7 @@
 @inject NavigationManager NavigationManager
 @inject TVScanner.Services.NotificationService NotificationService
 @inject IAccessTokenProvider TokenProvider
-@inject HttpClient Http
+@inject HttpClient ApiHttp
 @inject ILogger<Scanner> Logger
 @implements IAsyncDisposable
 @attribute [Authorize]
@@ -131,7 +131,7 @@
         tokenResult.TryGetToken(out token);
 
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(Http.BaseAddress.ToString() + "scannerhub", options =>
+            .WithUrl(new Uri(ApiHttp.BaseAddress, "scannerhub"), options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(token?.Value);
             })
