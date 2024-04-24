@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer.Services;
+﻿using Duende.IdentityServer.Hosting;
+using Duende.IdentityServer.Services;
 
 namespace TVScanner.API.Identity
 {

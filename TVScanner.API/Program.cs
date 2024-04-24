@@ -1,10 +1,8 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using TVScanner.API.Extensions;
 using TVScanner.API.Hubs;
 using TVScanner.API.Identity;
@@ -32,6 +30,7 @@ builder.Services.AddOptions<AppConfig>()
 
 var clientApp = builder.Configuration["ClientApp:Host"] ?? throw new InvalidOperationException("ClientApp not found");
 var clientAppName = builder.Configuration["ClientApp:Name"] ?? throw new InvalidOperationException("ClientAppName not found");
+var identityAuthority = builder.Configuration["IdentityServer:Authority"] ?? throw new InvalidOperationException("IdentityServer:Authority not found");
 
 // named http clients
 builder.Services.AddHttpClient(nameof(NotificationService), client =>
@@ -131,9 +130,11 @@ app.UseCors(b => b
           .AllowAnyMethod()
              .AllowCredentials());
 
+app.UseMiddleware<PublicIdentityUrlMiddleware>(identityAuthority);
+
 app.UseStaticFiles();
 
-//app.UseHttpsRedirection(); // running on docker, so https is configured in the reverse proxy
+//app.UseHttpsRedirection(); // running on docker, behind a proxy so https is configured there
 
 app.UseRouting();
 app.UseResponseCaching();
