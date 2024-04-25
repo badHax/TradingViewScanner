@@ -9,5 +9,6 @@
         }
 
         public const string ServerUrl = "TVScanner.Auth.ServerAPI";
+        public const string ScannerHub = "scannerhub";
     }
 }

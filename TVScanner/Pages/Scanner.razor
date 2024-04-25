@@ -14,9 +14,8 @@
 @inject IHtmlNotificationService HtmlNotificationService
 @inject NavigationManager NavigationManager
 @inject TVScanner.Services.NotificationService NotificationService
-@inject IAccessTokenProvider TokenProvider
-@inject HttpClient ApiHttp
 @inject ILogger<Scanner> Logger
+@inject SignalRService SignalRService
 @implements IAsyncDisposable
 @attribute [Authorize]
 
@@ -116,7 +115,6 @@
     private ScanRecord[]? records = [];
     private ScanRecord[]? highOfDayRecords = [];
     private string countTxt = "";
-    private HubConnection? hubConnection;
     private const string notificationTitle = "Criteria Matched!";
     private const string notificationAdded = "{0} is on the move";
 
@@ -126,35 +124,21 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var tokenResult = await TokenProvider.RequestAccessToken();
-        AccessToken? token;
-        tokenResult.TryGetToken(out token);
-
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(new Uri(ApiHttp.BaseAddress, "api/scannerhub"), options =>
+        await SignalRService.ListenToScanner<IEnumerable<ScanRecord>>(
+            Constants.MessageListeners.RelativeVolume, 
+            async (message) =>
             {
-                options.AccessTokenProvider = () => Task.FromResult(token?.Value);
-            })
-            .AddJsonProtocol(cfg =>
+                records = await UpdateRecords(message, records ?? Array.Empty<ScanRecord>());
+                await InvokeAsync(StateHasChanged);
+            });
+
+        await SignalRService.ListenToScanner<IEnumerable<ScanRecord>>(
+            Constants.MessageListeners.HighOfDay,
+            async (message) =>
             {
-                cfg.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
-                cfg.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            })
-            .Build();
-
-        hubConnection.On<IEnumerable<ScanRecord>>(Constants.MessageListeners.RelativeVolume, async (message) =>
-        {
-            records = await UpdateRecords(message, records ?? Array.Empty<ScanRecord>());
-            await InvokeAsync(StateHasChanged);
-        });
-
-        hubConnection.On<IEnumerable<ScanRecord>>(Constants.MessageListeners.HighOfDay, async (message) =>
-        {
-            highOfDayRecords = await UpdateRecords(message, highOfDayRecords ?? Array.Empty<ScanRecord>());
-            await InvokeAsync(StateHasChanged);
-        });
-
-        await hubConnection.StartAsync();
+                highOfDayRecords = await UpdateRecords(message, highOfDayRecords ?? Array.Empty<ScanRecord>());
+                await InvokeAsync(StateHasChanged);
+            });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -182,11 +166,6 @@
 
     public async ValueTask DisposeAsync()
     {
-        if (hubConnection != null)
-        {
-            await hubConnection.DisposeAsync();
-        }
-
         if (NotificationService != null)
         {
             await NotificationService.DisposeAsync();

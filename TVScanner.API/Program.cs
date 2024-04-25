@@ -3,6 +3,7 @@ using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TVScanner.API.Extensions;
 using TVScanner.API.Hubs;
@@ -138,6 +139,7 @@ app.UseCors(b => b
              .AllowCredentials());
 
 app.UseMiddleware<PublicIdentityUrlMiddleware>(identityAuthority);
+app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Strict });
 
 app.UseStaticFiles();
 
@@ -152,7 +154,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
-app.MapHub<ScannerHub>("/scannerHub");
+app.MapHub<ScannerHub>($"/{Constants.ScannerHub}");
 app.Services.GetRequiredService<SignalRMessageBuilder>(); // for instantiating SignalRMessageBuilder
 
 app.Run();

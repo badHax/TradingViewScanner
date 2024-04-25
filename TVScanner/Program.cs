@@ -12,8 +12,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var apiUrl = builder.Configuration.GetValue<string>(Constants.ServerUrl);
-builder.Services.AddHttpClient(Constants.ServerUrl, client => client.BaseAddress = new Uri(apiUrl!))
+var apiUrl = new Uri(builder.Configuration.GetValue<string>(Constants.ServerUrl)!);
+builder.Services.AddHttpClient(Constants.ServerUrl, client => client.BaseAddress = apiUrl)
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
@@ -21,14 +21,22 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 builder.Services.AddApiAuthorization(options =>
 {
-    options.ProviderOptions.ConfigurationEndpoint = apiUrl + "/_configuration/TVScanner.Client";
+    options.ProviderOptions.ConfigurationEndpoint = new Uri(apiUrl, "_configuration/TVScanner.Client").ToString();
 });
 
 // notifications
 builder.Services.AddCssEvents();
 builder.Services.AddNotifications();
-builder.Services.AddScoped(sp => new NotificationService(
+
+builder.Services.AddSingleton(sp => new NotificationService(
     sp.GetRequiredService<IHtmlNotificationService>(),
     sp.GetRequiredService<NavigationManager>()));
+
+// signalr
+builder.Services.AddSingleton(sp => new SignalRService(
+    sp.GetRequiredService<NavigationManager>(),
+    sp.GetRequiredService<IHttpClientFactory>().CreateClient(Constants.ServerUrl),
+    sp.GetRequiredService<IAccessTokenProvider>()
+    ));
 
 await builder.Build().RunAsync();

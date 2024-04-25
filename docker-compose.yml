@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: Dockerfile.Web
       args:
-        - API_URL=https://localhost:15006
+        - API_URL=http://localhost:15005/
     ports:
       - 15007:80
     depends_on:

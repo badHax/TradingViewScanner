@@ -26,7 +26,7 @@ namespace TVScanner.API.Hubs
 
             if (relativeVolume.Any())
             {
-                await Clients.Caller.realtiveVolume(relativeVolume);
+                await Clients.Caller.relativeVolume(relativeVolume);
             }
 
             if (highOfDay.Any())

@@ -2,7 +2,7 @@
 {
     public interface IScanUpdater
     {
-        Task realtiveVolume(IEnumerable<ScanRecord> message);
+        Task relativeVolume(IEnumerable<ScanRecord> message);
         Task highOfDay(IEnumerable<ScanRecord> message);
     }
 }

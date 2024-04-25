@@ -20,7 +20,7 @@ namespace TVScanner.API.Hubs
 
             _cache.Subscribe<IEnumerable<ScanRecord>>(Constants.MessageListeners.HighOfDay, async (message) =>
             {
-                await _hubContext.Clients.All.SendAsync(Constants.MessageListeners.RelativeVolume, message);
+                await _hubContext.Clients.All.SendAsync(Constants.MessageListeners.HighOfDay, message);
             });
         }
 
