@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.SignalR;
 using TVScanner.Shared;
 using TVScanner.Shared.Scanner;
@@ -6,7 +8,7 @@ using TVScanner.Shared.Scanner;
 namespace TVScanner.API.Hubs
 {
     [Authorize]
-    public class ScannerHub : Hub<IScanUpdater>
+    public class ScannerHub : MessageHubBase<IScanUpdater>
     {
         private readonly ICache _cache;
 

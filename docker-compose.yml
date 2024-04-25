@@ -27,21 +27,10 @@ services:
     ports:
     - 15005:8080
     - 15006:8081
-    environment: # Development environment variables
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_HTTPS_PORTS=8081
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__TVScannerContext=Host=tvscannerdb;Port=5432;Database=TVScanner;Username=postgres;password=Password123;
-      - Logging__LogLevel__Default=Information
-      - Users__DefaultAdmin:Name=devadmin
-      - Users__DefaultAdmin:Password=Password123
-      - Users__DefaultAdmin:Email=devadmin@tvscanner.com
-      - AppConfig__NotificationConfig__PushUrlBase=https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey={_apiKey}&deviceId={_deviceId}
-      - AppConfig__NotificationConfig__DeviceId=
-      - AppConfig__NotificationConfig__ApiKey=
-      - AppConfig__ScannerConfig__Url=https://scanner.tradingview.com/
+    volumes: # copy over user secrets from your development machine
+     - ~/.aspnet/https:/https:ro
+     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
       - tvscannerdb
     networks:

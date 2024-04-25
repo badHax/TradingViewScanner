@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  tvscanner.api:
-    volumes:
-      - ~/.aspnet/https:/https:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

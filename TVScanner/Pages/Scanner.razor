@@ -144,8 +144,6 @@
 
         hubConnection.On<IEnumerable<ScanRecord>>(Constants.MessageListeners.RelativeVolume, async (message) =>
         {
-            Console.WriteLine("RelativeVolume message received");
-            Console.WriteLine(message);
             records = await UpdateRecords(message, records ?? Array.Empty<ScanRecord>());
             await InvokeAsync(StateHasChanged);
         });
