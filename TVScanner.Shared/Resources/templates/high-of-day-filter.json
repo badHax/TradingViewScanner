@@ -16,11 +16,6 @@
       "right": "USDT"
     },
     {
-      "left": "relative_volume_10d_calc",
-      "operation": "egreater",
-      "right": 3
-    },
-    {
       "left": "change|5",
       "operation": "not_in_range",
       "right": [
