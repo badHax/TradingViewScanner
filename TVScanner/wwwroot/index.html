@@ -48,11 +48,7 @@
     <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script type="module" src="js/notify.js"></script>
-    <script>
-        //navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' }).then(registration => {
-        //    Toolbelt.Blazor.PWA.Updater.handleRegistration(registration);
-        //});
-    </script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 
 </html>

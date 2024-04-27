@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<!--<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>-->
+		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
 		<OutputType>Exe</OutputType>
 		<UserSecretsId>944b5b8e-5d32-40ea-b040-7b1896124f91</UserSecretsId>
 	</PropertyGroup>
@@ -35,8 +35,8 @@
 		<ProjectReference Include="..\TVScanner.Shared\TVScanner.Shared.csproj" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
+	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-	</ItemGroup>-->
+	</ItemGroup>
 
 </Project>
