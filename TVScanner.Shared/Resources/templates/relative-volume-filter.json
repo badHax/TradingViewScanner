@@ -8,7 +8,7 @@
     {
       "left": "relative_volume_10d_calc|5",
       "operation": "egreater",
-      "right": 5
+      "right": 4
     },
     {
       "left": "change|5",
